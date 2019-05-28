@@ -101,6 +101,10 @@ public class UserController {
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
+		
+		String firstName = null;
+		int firstNameLength = firstName.length();
+		
 		if(users.containsKey(userId)) {
 			return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
 		}else {
@@ -147,8 +151,9 @@ public class UserController {
 		return storeUserDetails;
 	}
 	
-	@DeleteMapping
-	public String deleteUser() {
-		return "delete user called";
+	@DeleteMapping(path="/{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable String id) {
+		users.remove(id);
+		return ResponseEntity.noContent().build();
 	}	
 }
