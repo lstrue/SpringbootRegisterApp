@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +24,17 @@ import com.appsdeveloperblog.app.ws.exceptions.UserServiceException;
 import com.appsdeveloperblog.app.ws.ui.model.request.UpdateUserDetailsRequestModel;
 import com.appsdeveloperblog.app.ws.ui.model.request.UserDetailsRequestModel;
 import com.appsdeveloperblog.app.ws.ui.model.response.UserRest;
+import com.appsdeveloperblog.app.ws.userservice.UserService;
+import com.appsdeveloperblog.app.ws.userservice.UserServiceImpl;
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
 	
 	Map<String, UserRest> users;
-	
 
-//	@GetMapping(path="/{userId}")
-//	public String getUser(@PathVariable String userId) {
+	@Autowired
+	UserService userService;
 	
 	@GetMapping
 	public String getUser(@RequestParam(value="page", defaultValue="1") int page,
@@ -41,75 +43,10 @@ public class UserController {
 		return "get user called page = " + page + " limit " + limit + " sort: " + sort;
 	}
 	
-//	@GetMapping(path="/{userId}")
-//	public UserRest getUser(@PathVariable String userId) {
-//		UserRest returnValue = new UserRest();
-//		returnValue.setEmail("test@test.com");
-//		returnValue.setFirstName("David");
-//		returnValue.setLastName("Lee");
-//		return returnValue;
-//	}
-	
-//	@GetMapping(path="/{userId}", produces = { 
-//			MediaType.APPLICATION_XML_VALUE,
-//			MediaType.APPLICATION_JSON_VALUE})
-//	public UserRest getUser(@PathVariable String userId) {
-//		UserRest returnValue = new UserRest();
-//		returnValue.setEmail("test@test.com");
-//		returnValue.setFirstName("David");
-//		returnValue.setLastName("Lee");
-//		return returnValue;
-//	}
-	
-//	@GetMapping(path="/{userId}", produces = { 
-//			MediaType.APPLICATION_XML_VALUE,
-//			MediaType.APPLICATION_JSON_VALUE})
-//	public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-//		UserRest returnValue = new UserRest();
-//		returnValue.setEmail("test@test.com");
-//		returnValue.setFirstName("David");
-//		returnValue.setLastName("Lee");
-//		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
-////		return new ResponseEntity<UserRest>(HttpStatus.BAD_REQUEST);
-//	}
-	
-	//create
-	//http://localhost:8080/users
-	//{
-//	"firstName": "Melinda",
-//	"lastName": "Gates",
-//	"email": "bill@ms.com",
-//	"password": "123"
-//}
-	//accept Content-Type application/json 
-//	@PostMapping(consumes = { 
-//				MediaType.APPLICATION_XML_VALUE,
-//				MediaType.APPLICATION_JSON_VALUE},
-//			produces = { 
-//				MediaType.APPLICATION_XML_VALUE,
-//				MediaType.APPLICATION_JSON_VALUE})
-//	public ResponseEntity createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
-//		UserRest returnValue = new UserRest();
-//		returnValue.setEmail(userDetails.getEmail());
-//		returnValue.setFirstName(userDetails.getFirstName());
-//		returnValue.setLastName(userDetails.getLastName());
-//		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
-//	}
-//	
-	
-	
 	@GetMapping(path="/{userId}", produces = { 
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserRest> getUser(@PathVariable String userId) {
-		
-//		String firstName = null;
-//		int firstNameLength = firstName.length();
-		
-		if(true) {
-			throw new UserServiceException("a user service exception is thrown");
-		}
-		
 		if(users.containsKey(userId)) {
 			return new ResponseEntity<>(users.get(userId), HttpStatus.OK);
 		}else {
@@ -124,17 +61,8 @@ public class UserController {
 			MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
-		UserRest returnValue = new UserRest();
-		returnValue.setEmail(userDetails.getEmail());
-		returnValue.setFirstName(userDetails.getFirstName());
-		returnValue.setLastName(userDetails.getLastName());
 		
-		String userId = UUID.randomUUID().toString();
-		returnValue.setUserId(userId);
-		if(users == null) {
-			users = new HashMap<>();
-		}
-		users.put(userId, returnValue);
+		UserRest returnValue = new UserServiceImpl().createUser(userDetails);
 		
 		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
 	}
