@@ -1,5 +1,6 @@
 package com.appsdeveloperblog.app.ws.ui.controller;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,7 +26,18 @@ public class UserController {
 		return "get user called page = " + page + " limit " + limit + " sort: " + sort;
 	}
 	
-	@GetMapping(path="/{userId}")
+//	@GetMapping(path="/{userId}")
+//	public UserRest getUser(@PathVariable String userId) {
+//		UserRest returnValue = new UserRest();
+//		returnValue.setEmail("test@test.com");
+//		returnValue.setFirstName("David");
+//		returnValue.setLastName("Lee");
+//		return returnValue;
+//	}
+	
+	@GetMapping(path="/{userId}", produces = { 
+			MediaType.APPLICATION_XML_VALUE,
+			MediaType.APPLICATION_JSON_VALUE})
 	public UserRest getUser(@PathVariable String userId) {
 		UserRest returnValue = new UserRest();
 		returnValue.setEmail("test@test.com");
