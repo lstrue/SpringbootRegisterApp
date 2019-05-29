@@ -62,7 +62,8 @@ public class UserController {
 			MediaType.APPLICATION_JSON_VALUE})
 	public ResponseEntity<UserRest> createUser(@Valid @RequestBody UserDetailsRequestModel userDetails) {
 		
-		UserRest returnValue = new UserServiceImpl().createUser(userDetails);
+//		UserRest returnValue = new UserServiceImpl().createUser(userDetails);
+		UserRest returnValue = userService.createUser(userDetails);
 		
 		return new ResponseEntity<UserRest>(returnValue, HttpStatus.OK);
 	}
